@@ -17,7 +17,8 @@ module.exports = (req, res) => {
             '^/o': '/o',
             '^/u': '/u',
             '^/api': '/api',
-            '^/explore':'/explore'
+            '^/explore':'/explore',
+            '/u/1/rss.xml':'/u/1/rss.xml'
         }
     })(req, res)
 }
