@@ -11,7 +11,7 @@ const MyAccountSection = () => {
   const { t } = useTranslation();
   const userStore = useUserStore();
   const user = userStore.state.user as User;
-  const openAPIRoute = `https://2504.qiangtu.com:5231/api/memo?openId=${user.openId}`;
+  const openAPIRoute = `${window.location.origin}/api/memo?openId=${user.openId}`;
 
   const handleResetOpenIdBtnClick = async () => {
     showCommonDialog({
@@ -55,7 +55,7 @@ const MyAccountSection = () => {
         </span>
         <div className="usage-guide-container">
           <pre>{`POST ${openAPIRoute}\nContent-type: application/json\n{\n  "content": "${t("setting.account-section.openapi-sample-post", {
-            url: "https://2504.qiangtu.com:5231/",
+            url: window.location.origin,
             interpolation: { escapeValue: false },
           })}"\n}`}</pre>
         </div>

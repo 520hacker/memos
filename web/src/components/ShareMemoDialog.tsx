@@ -102,7 +102,7 @@ const ShareMemoDialog: React.FC<Props> = (props: Props) => {
   };
 
   const handleCopyLinkBtnClick = () => {
-    copy(`https://2504.qiangtu.com:5231/m/${memo.id}`);
+    copy(`${window.location.origin}/m/${memo.id}`);
     toast.success(t("message.succeed-copy-link"));
   };
 
@@ -190,7 +190,7 @@ const ShareMemoDialog: React.FC<Props> = (props: Props) => {
                 </span>
               </div>
               <QRCodeSVG
-                value={`https://2504.qiangtu.com:5231/m/${memo.id}`}
+                value={`${window.location.origin}/m/${memo.id}`}
                 size={40}
                 bgColor={"#F3F4F6"}
                 fgColor={"#4B5563"}
