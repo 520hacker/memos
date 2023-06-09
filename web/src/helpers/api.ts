@@ -6,31 +6,38 @@ type ResponseObject<T> = {
   message?: string;
 };
 
+const memosApi = axios.create({
+  baseURL: "https://2504.qiangtu.com:5231",
+  withCredentials: true,
+});
+
+const githubApi = axios.create();
+
 export function getSystemStatus() {
-  return axios.get<ResponseObject<SystemStatus>>("/api/status");
+  return memosApi.get<ResponseObject<SystemStatus>>("/api/status");
 }
 
 export function getSystemSetting() {
-  return axios.get<ResponseObject<SystemSetting[]>>("/api/system/setting");
+  return memosApi.get<ResponseObject<SystemSetting[]>>("/api/system/setting");
 }
 
 export function upsertSystemSetting(systemSetting: SystemSetting) {
-  return axios.post<ResponseObject<SystemSetting>>("/api/system/setting", systemSetting);
+  return memosApi.post<ResponseObject<SystemSetting>>("/api/system/setting", systemSetting);
 }
 
 export function vacuumDatabase() {
-  return axios.post("/api/system/vacuum");
+  return memosApi.post("/api/system/vacuum");
 }
 
 export function signin(username: string, password: string) {
-  return axios.post<ResponseObject<User>>("/api/auth/signin", {
+  return memosApi.post<ResponseObject<User>>("/api/auth/signin", {
     username,
     password,
   });
 }
 
 export function signinWithSSO(identityProviderId: IdentityProviderId, code: string, redirectUri: string) {
-  return axios.post<ResponseObject<User>>("/api/auth/signin/sso", {
+  return memosApi.post<ResponseObject<User>>("/api/auth/signin/sso", {
     identityProviderId,
     code,
     redirectUri,
@@ -38,42 +45,42 @@ export function signinWithSSO(identityProviderId: IdentityProviderId, code: stri
 }
 
 export function signup(username: string, password: string) {
-  return axios.post<ResponseObject<User>>("/api/auth/signup", {
+  return memosApi.post<ResponseObject<User>>("/api/auth/signup", {
     username,
     password,
   });
 }
 
 export function signout() {
-  return axios.post("/api/auth/signout");
+  return memosApi.post("/api/auth/signout");
 }
 
 export function createUser(userCreate: UserCreate) {
-  return axios.post<ResponseObject<User>>("/api/user", userCreate);
+  return memosApi.post<ResponseObject<User>>("/api/user", userCreate);
 }
 
 export function getMyselfUser() {
-  return axios.get<ResponseObject<User>>("/api/user/me");
+  return memosApi.get<ResponseObject<User>>("/api/user/me");
 }
 
 export function getUserList() {
-  return axios.get<ResponseObject<User[]>>("/api/user");
+  return memosApi.get<ResponseObject<User[]>>("/api/user");
 }
 
 export function getUserById(id: number) {
-  return axios.get<ResponseObject<User>>(`/api/user/${id}`);
+  return memosApi.get<ResponseObject<User>>(`/api/user/${id}`);
 }
 
 export function upsertUserSetting(upsert: UserSettingUpsert) {
-  return axios.post<ResponseObject<UserSetting>>(`/api/user/setting`, upsert);
+  return memosApi.post<ResponseObject<UserSetting>>(`/api/user/setting`, upsert);
 }
 
 export function patchUser(userPatch: UserPatch) {
-  return axios.patch<ResponseObject<User>>(`/api/user/${userPatch.id}`, userPatch);
+  return memosApi.patch<ResponseObject<User>>(`/api/user/${userPatch.id}`, userPatch);
 }
 
 export function deleteUser(userDelete: UserDelete) {
-  return axios.delete(`/api/user/${userDelete.id}`);
+  return memosApi.delete(`/api/user/${userDelete.id}`);
 }
 
 export function getAllMemos(memoFind?: MemoFind) {
@@ -85,7 +92,7 @@ export function getAllMemos(memoFind?: MemoFind) {
     queryList.push(`limit=${memoFind.limit}`);
   }
 
-  return axios.get<ResponseObject<Memo[]>>(`/api/memo/all?${queryList.join("&")}`);
+  return memosApi.get<ResponseObject<Memo[]>>(`/api/memo/all?${queryList.join("&")}`);
 }
 
 export function getMemoList(memoFind?: MemoFind) {
@@ -105,39 +112,39 @@ export function getMemoList(memoFind?: MemoFind) {
   if (memoFind?.limit) {
     queryList.push(`limit=${memoFind.limit}`);
   }
-  return axios.get<ResponseObject<Memo[]>>(`/api/memo?${queryList.join("&")}`);
+  return memosApi.get<ResponseObject<Memo[]>>(`/api/memo?${queryList.join("&")}`);
 }
 
 export function getMemoStats(userId: UserId) {
-  return axios.get<ResponseObject<number[]>>(`/api/memo/stats?creatorId=${userId}`);
+  return memosApi.get<ResponseObject<number[]>>(`/api/memo/stats?creatorId=${userId}`);
 }
 
 export function getMemoById(id: MemoId) {
-  return axios.get<ResponseObject<Memo>>(`/api/memo/${id}`);
+  return memosApi.get<ResponseObject<Memo>>(`/api/memo/${id}`);
 }
 
 export function createMemo(memoCreate: MemoCreate) {
-  return axios.post<ResponseObject<Memo>>("/api/memo", memoCreate);
+  return memosApi.post<ResponseObject<Memo>>("/api/memo", memoCreate);
 }
 
 export function patchMemo(memoPatch: MemoPatch) {
-  return axios.patch<ResponseObject<Memo>>(`/api/memo/${memoPatch.id}`, memoPatch);
+  return memosApi.patch<ResponseObject<Memo>>(`/api/memo/${memoPatch.id}`, memoPatch);
 }
 
 export function pinMemo(memoId: MemoId) {
-  return axios.post(`/api/memo/${memoId}/organizer`, {
+  return memosApi.post(`/api/memo/${memoId}/organizer`, {
     pinned: true,
   });
 }
 
 export function unpinMemo(memoId: MemoId) {
-  return axios.post(`/api/memo/${memoId}/organizer`, {
+  return memosApi.post(`/api/memo/${memoId}/organizer`, {
     pinned: false,
   });
 }
 
 export function deleteMemo(memoId: MemoId) {
-  return axios.delete(`/api/memo/${memoId}`);
+  return memosApi.delete(`/api/memo/${memoId}`);
 }
 
 export function getShortcutList(shortcutFind?: ShortcutFind) {
@@ -145,23 +152,23 @@ export function getShortcutList(shortcutFind?: ShortcutFind) {
   if (shortcutFind?.creatorId) {
     queryList.push(`creatorId=${shortcutFind.creatorId}`);
   }
-  return axios.get<ResponseObject<Shortcut[]>>(`/api/shortcut?${queryList.join("&")}`);
+  return memosApi.get<ResponseObject<Shortcut[]>>(`/api/shortcut?${queryList.join("&")}`);
 }
 
 export function createShortcut(shortcutCreate: ShortcutCreate) {
-  return axios.post<ResponseObject<Shortcut>>("/api/shortcut", shortcutCreate);
+  return memosApi.post<ResponseObject<Shortcut>>("/api/shortcut", shortcutCreate);
 }
 
 export function patchShortcut(shortcutPatch: ShortcutPatch) {
-  return axios.patch<ResponseObject<Shortcut>>(`/api/shortcut/${shortcutPatch.id}`, shortcutPatch);
+  return memosApi.patch<ResponseObject<Shortcut>>(`/api/shortcut/${shortcutPatch.id}`, shortcutPatch);
 }
 
 export function deleteShortcutById(shortcutId: ShortcutId) {
-  return axios.delete(`/api/shortcut/${shortcutId}`);
+  return memosApi.delete(`/api/shortcut/${shortcutId}`);
 }
 
 export function getResourceList() {
-  return axios.get<ResponseObject<Resource[]>>("/api/resource");
+  return memosApi.get<ResponseObject<Resource[]>>("/api/resource");
 }
 
 export function getResourceListWithLimit(resourceFind?: ResourceFind) {
@@ -172,37 +179,37 @@ export function getResourceListWithLimit(resourceFind?: ResourceFind) {
   if (resourceFind?.limit) {
     queryList.push(`limit=${resourceFind.limit}`);
   }
-  return axios.get<ResponseObject<Resource[]>>(`/api/resource?${queryList.join("&")}`);
+  return memosApi.get<ResponseObject<Resource[]>>(`/api/resource?${queryList.join("&")}`);
 }
 
 export function createResource(resourceCreate: ResourceCreate) {
-  return axios.post<ResponseObject<Resource>>("/api/resource", resourceCreate);
+  return memosApi.post<ResponseObject<Resource>>("/api/resource", resourceCreate);
 }
 
 export function createResourceWithBlob(formData: FormData) {
-  return axios.post<ResponseObject<Resource>>("/api/resource/blob", formData);
+  return memosApi.post<ResponseObject<Resource>>("/api/resource/blob", formData);
 }
 
 export function deleteResourceById(id: ResourceId) {
-  return axios.delete(`/api/resource/${id}`);
+  return memosApi.delete(`/api/resource/${id}`);
 }
 
 export function patchResource(resourcePatch: ResourcePatch) {
-  return axios.patch<ResponseObject<Resource>>(`/api/resource/${resourcePatch.id}`, resourcePatch);
+  return memosApi.patch<ResponseObject<Resource>>(`/api/resource/${resourcePatch.id}`, resourcePatch);
 }
 
 export function getMemoResourceList(memoId: MemoId) {
-  return axios.get<ResponseObject<Resource[]>>(`/api/memo/${memoId}/resource`);
+  return memosApi.get<ResponseObject<Resource[]>>(`/api/memo/${memoId}/resource`);
 }
 
 export function upsertMemoResource(memoId: MemoId, resourceId: ResourceId) {
-  return axios.post<ResponseObject<Resource>>(`/api/memo/${memoId}/resource`, {
+  return memosApi.post<ResponseObject<Resource>>(`/api/memo/${memoId}/resource`, {
     resourceId,
   });
 }
 
 export function deleteMemoResource(memoId: MemoId, resourceId: ResourceId) {
-  return axios.delete(`/api/memo/${memoId}/resource/${resourceId}`);
+  return memosApi.delete(`/api/memo/${memoId}/resource/${resourceId}`);
 }
 
 export function getTagList(tagFind?: TagFind) {
@@ -210,59 +217,59 @@ export function getTagList(tagFind?: TagFind) {
   if (tagFind?.creatorId) {
     queryList.push(`creatorId=${tagFind.creatorId}`);
   }
-  return axios.get<ResponseObject<string[]>>(`/api/tag?${queryList.join("&")}`);
+  return memosApi.get<ResponseObject<string[]>>(`/api/tag?${queryList.join("&")}`);
 }
 
 export function getTagSuggestionList() {
-  return axios.get<ResponseObject<string[]>>(`/api/tag/suggestion`);
+  return memosApi.get<ResponseObject<string[]>>(`/api/tag/suggestion`);
 }
 
 export function upsertTag(tagName: string) {
-  return axios.post<ResponseObject<string>>(`/api/tag`, {
+  return memosApi.post<ResponseObject<string>>(`/api/tag`, {
     name: tagName,
   });
 }
 
 export function deleteTag(tagName: string) {
-  return axios.post<ResponseObject<boolean>>(`/api/tag/delete`, {
+  return memosApi.post<ResponseObject<boolean>>(`/api/tag/delete`, {
     name: tagName,
   });
 }
 
 export function getStorageList() {
-  return axios.get<ResponseObject<ObjectStorage[]>>(`/api/storage`);
+  return memosApi.get<ResponseObject<ObjectStorage[]>>(`/api/storage`);
 }
 
 export function createStorage(storageCreate: StorageCreate) {
-  return axios.post<ResponseObject<ObjectStorage>>(`/api/storage`, storageCreate);
+  return memosApi.post<ResponseObject<ObjectStorage>>(`/api/storage`, storageCreate);
 }
 
 export function patchStorage(storagePatch: StoragePatch) {
-  return axios.patch<ResponseObject<ObjectStorage>>(`/api/storage/${storagePatch.id}`, storagePatch);
+  return memosApi.patch<ResponseObject<ObjectStorage>>(`/api/storage/${storagePatch.id}`, storagePatch);
 }
 
 export function deleteStorage(storageId: StorageId) {
-  return axios.delete(`/api/storage/${storageId}`);
+  return memosApi.delete(`/api/storage/${storageId}`);
 }
 
 export function getIdentityProviderList() {
-  return axios.get<ResponseObject<IdentityProvider[]>>(`/api/idp`);
+  return memosApi.get<ResponseObject<IdentityProvider[]>>(`/api/idp`);
 }
 
 export function createIdentityProvider(identityProviderCreate: IdentityProviderCreate) {
-  return axios.post<ResponseObject<IdentityProvider>>(`/api/idp`, identityProviderCreate);
+  return memosApi.post<ResponseObject<IdentityProvider>>(`/api/idp`, identityProviderCreate);
 }
 
 export function patchIdentityProvider(identityProviderPatch: IdentityProviderPatch) {
-  return axios.patch<ResponseObject<IdentityProvider>>(`/api/idp/${identityProviderPatch.id}`, identityProviderPatch);
+  return memosApi.patch<ResponseObject<IdentityProvider>>(`/api/idp/${identityProviderPatch.id}`, identityProviderPatch);
 }
 
 export function deleteIdentityProvider(id: IdentityProviderId) {
-  return axios.delete(`/api/idp/${id}`);
+  return memosApi.delete(`/api/idp/${id}`);
 }
 
 export async function getRepoStarCount() {
-  const { data } = await axios.get(`https://api.github.com/repos/usememos/memos`, {
+  const { data } = await githubApi.get(`https://api.github.com/repos/usememos/memos`, {
     headers: {
       Accept: "application/vnd.github.v3.star+json",
       Authorization: "",
@@ -272,7 +279,7 @@ export async function getRepoStarCount() {
 }
 
 export async function getRepoLatestTag() {
-  const { data } = await axios.get(`https://api.github.com/repos/usememos/memos/tags`, {
+  const { data } = await githubApi.get(`https://api.github.com/repos/usememos/memos/tags`, {
     headers: {
       Accept: "application/vnd.github.v3.star+json",
       Authorization: "",
