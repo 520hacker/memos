@@ -13,7 +13,11 @@ module.exports = (req, res) => {
         target,
         changeOrigin: true,
         pathRewrite: {
-            '^/': '/'
+            '^/': '/',
+            '^/o': '/o',
+            '^/u': '/u',
+            '^/api': '/api',
+            '^/explore':'/explore'
         }
     })(req, res)
 }
