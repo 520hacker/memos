@@ -55,7 +55,7 @@ const MemoList = () => {
           if (
             duration &&
             duration.from < duration.to &&
-            (getTimeStampByDate(memo.displayTs) < duration.from || getTimeStampByDate(memo.displayTs) > duration.to)
+            (getTimeStampByDate(memo.createdTs) < duration.from || getTimeStampByDate(memo.createdTs) > duration.to)
           ) {
             shouldShow = false;
           }
@@ -81,7 +81,7 @@ const MemoList = () => {
   const pinnedMemos = shownMemos.filter((m) => m.pinned);
   const unpinnedMemos = shownMemos.filter((m) => !m.pinned);
   const memoSort = (mi: Memo, mj: Memo) => {
-    return mj.displayTs - mi.displayTs;
+    return mj.createdTs - mi.createdTs;
   };
   pinnedMemos.sort(memoSort);
   unpinnedMemos.sort(memoSort);
@@ -153,7 +153,7 @@ const MemoList = () => {
   return (
     <div className="memo-list-container">
       {sortedMemos.map((memo) => (
-        <Memo key={`${memo.id}-${memo.displayTs}`} memo={memo} />
+        <Memo key={`${memo.id}-${memo.createdTs}`} memo={memo} />
       ))}
       {isFetching ? (
         <div className="status-text-container fetching-tip">

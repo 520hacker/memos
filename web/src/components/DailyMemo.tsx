@@ -9,7 +9,7 @@ interface Props {
 
 const DailyMemo: React.FC<Props> = (props: Props) => {
   const { memo } = props;
-  const displayTimeStr = getTimeString(memo.displayTs);
+  const displayTimeStr = getTimeString(memo.createdTs);
 
   return (
     <div className="daily-memo-wrapper">

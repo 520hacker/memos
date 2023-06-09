@@ -116,6 +116,11 @@ export function getDateString(t?: Date | number | string, locale = i18n.language
  *
  */
 export const getRelativeTimeString = (time: number, locale = i18n.language, formatStyle: "long" | "short" | "narrow" = "long"): string => {
+  if (!Number.isFinite(time)) {
+    // console.log("Invalid time value" + time);
+    time = 0;
+  }
+
   const pastTimeMillis = Date.now() - time;
   const secMillis = 1000;
   const minMillis = secMillis * 60;

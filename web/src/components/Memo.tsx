@@ -33,7 +33,7 @@ const Memo: React.FC<Props> = (props: Props) => {
   const userStore = useUserStore();
   const memoStore = useMemoStore();
   const memoCacheStore = useMemoCacheStore();
-  const [createdTimeStr, setCreatedTimeStr] = useState<string>(getRelativeTimeString(memo.displayTs));
+  const [createdTimeStr, setCreatedTimeStr] = useState<string>(getRelativeTimeString(memo.createdTs));
   const [relatedMemoList, setRelatedMemoList] = useState<Memo[]>([]);
   const memoContainerRef = useRef<HTMLDivElement>(null);
   const isVisitorMode = userStore.isVisitorMode() || readonly;
@@ -54,9 +54,10 @@ const Memo: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     let intervalFlag: any = -1;
-    if (Date.now() - memo.displayTs < 1000 * 60 * 60 * 24) {
+    if (Date.now() - memo.createdTs < 1000 * 60 * 60 * 24) {
       intervalFlag = setInterval(() => {
-        setCreatedTimeStr(getRelativeTimeString(memo.displayTs));
+        // console.log(memo);
+        setCreatedTimeStr(getRelativeTimeString(memo.createdTs));
       }, 1000 * 1);
     }
 
